@@ -3,7 +3,7 @@ spring:
     name: comala-backend
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/comala_db}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/comala_db}
     username: ${DB_USERNAME:comala}
     password: ${DB_PASSWORD:comalapswd123lol}
     driver-class-name: org.postgresql.Driver
@@ -32,7 +32,7 @@ spring:
       enabled: always
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:8081}
 
 comala:
   jwt:
