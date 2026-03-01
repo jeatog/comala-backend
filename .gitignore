@@ -1,0 +1,31 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# Spring Boot
+*.pid
+spring.log
+
+# Variables de entorno
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# macOS
+.DS_Store
