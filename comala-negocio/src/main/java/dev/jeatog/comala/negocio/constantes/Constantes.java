@@ -29,4 +29,12 @@ public final class Constantes {
     // Valores de negocio
     public static final String CLAIM_NEGOCIO_ACTIVO_ID = "negocio_activo_id";
     public static final String CLAIM_ROL               = "rol";
+
+    // Estatus HTTP usados al lanzar ComalaExcepcion
+    public static final int HTTP_400_BAD_REQUEST   = 400;
+    public static final int HTTP_401_UNAUTHORIZED  = 401;
+    public static final int HTTP_403_FORBIDDEN     = 403;
+    public static final int HTTP_404_NOT_FOUND     = 404;
+    public static final int HTTP_409_CONFLICT      = 409;
+    public static final int HTTP_422_UNPROCESSABLE = 422;
 }
