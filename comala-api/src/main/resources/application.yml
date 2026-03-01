@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: comala-backend
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/comala_db}
+    username: ${DB_USERNAME:comala}
+    password: ${DB_PASSWORD:comalapswd123lol}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        default_batch_fetch_size: 20
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  output:
+    ansi:
+      enabled: always
+
+server:
+  port: ${PORT:8080}
+
+comala:
+  jwt:
+    # Aquí no hay pedo, esto en producción es diferente; este secret es local
+    secret: ${JWT_SECRET:b2Iv18tTrmqKfQcjDO2xPsxrn6c8QDZ2/g3rANpJZeY=}
+    expiracion-ms: ${JWT_EXPIRACION_MS:86400000}  # 24 horas
