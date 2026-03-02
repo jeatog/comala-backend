@@ -26,13 +26,17 @@ public class SeguridadEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+                         AuthenticationException authException) {
         log.warn("[SEGURIDAD] 401 No autenticado: {} {} — {}",
                 request.getMethod(), request.getRequestURI(), authException.getMessage());
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
-        objectMapper.writeValue(response.getWriter(),
-                ErrorRes.de("NO_AUTENTICADO", "Autenticacion requerida. Incluye un token JWT valido."));
+        try {
+            objectMapper.writeValue(response.getWriter(),
+                    ErrorRes.de("NO_AUTENTICADO", "Autenticacion requerida. Incluye un token JWT valido."));
+        } catch (IOException e) {
+            log.error("[SEGURIDAD] Error al escribir respuesta 401: {}", e.getMessage());
+        }
     }
 }
