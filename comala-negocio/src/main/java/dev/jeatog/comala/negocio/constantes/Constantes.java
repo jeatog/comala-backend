@@ -27,6 +27,8 @@ public final class Constantes {
     public static final String ERR_VARIANTE_NO_DISPONIBLE   = "VARIANTE_NO_DISPONIBLE";
     public static final String ERR_CATEGORIA_NO_ENCONTRADA  = "CATEGORIA_NO_ENCONTRADA";
 
+    public static final String ERR_ALMACENAMIENTO = "ALMACENAMIENTO_ERROR";
+
     // Valores de negocio
     public static final String CLAIM_NEGOCIO_ACTIVO_ID = "negocio_activo_id";
     public static final String CLAIM_ROL               = "rol";
@@ -38,4 +40,5 @@ public final class Constantes {
     public static final int HTTP_404_NOT_FOUND     = 404;
     public static final int HTTP_409_CONFLICT      = 409;
     public static final int HTTP_422_UNPROCESSABLE = 422;
+    public static final int HTTP_500_INTERNAL_ERROR = 500;
 }
