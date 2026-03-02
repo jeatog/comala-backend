@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${DB_TEST_URL:jdbc:postgresql://localhost:5433/comala_db}
+    username: ${DB_USERNAME:comala}
+    password: ${DB_PASSWORD:comalapswd123lol}
+
+  flyway:
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+comala:
+  almacenamiento:
+    directorio: ${java.io.tmpdir}/comala-test-uploads
+    url-base: http://localhost:8081/uploads

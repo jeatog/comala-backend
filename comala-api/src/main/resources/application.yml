@@ -39,3 +39,6 @@ comala:
     # Aquí no hay pedo, esto en producción es diferente; este secret es local
     secret: ${JWT_SECRET:b2Iv18tTrmqKfQcjDO2xPsxrn6c8QDZ2/g3rANpJZeY=}
     expiracion-ms: ${JWT_EXPIRACION_MS:86400000}  # 24 horas
+  almacenamiento:
+    directorio: ${UPLOADS_DIR:./uploads}
+    url-base: ${UPLOADS_URL:http://localhost:8081/uploads}
