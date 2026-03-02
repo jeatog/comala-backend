@@ -13,10 +13,11 @@ public final class Constantes {
     public static final String ERR_PEDIDO_CONFLICTO      = "PEDIDO_CONFLICTO";
     public static final String ERR_PEDIDO_SIN_LINEAS     = "PEDIDO_SIN_LINEAS";
 
-    public static final String ERR_USUARIO_NO_ENCONTRADO = "USUARIO_NO_ENCONTRADO";
-    public static final String ERR_CREDENCIALES_INVALIDAS = "CREDENCIALES_INVALIDAS";
-    public static final String ERR_ACCESO_DENEGADO       = "ACCESO_DENEGADO";
-    public static final String ERR_TOKEN_INVALIDO        = "TOKEN_INVALIDO";
+    public static final String ERR_USUARIO_NO_ENCONTRADO    = "USUARIO_NO_ENCONTRADO";
+    public static final String ERR_USUARIO_CONFLICTO        = "USUARIO_CONFLICTO";
+    public static final String ERR_CREDENCIALES_INVALIDAS   = "CREDENCIALES_INVALIDAS";
+    public static final String ERR_ACCESO_DENEGADO          = "ACCESO_DENEGADO";
+    public static final String ERR_TOKEN_INVALIDO           = "TOKEN_INVALIDO";
 
     public static final String ERR_NEGOCIO_NO_ENCONTRADO = "NEGOCIO_NO_ENCONTRADO";
     public static final String ERR_NEGOCIO_NO_PERTENECE  = "NEGOCIO_NO_PERTENECE";
