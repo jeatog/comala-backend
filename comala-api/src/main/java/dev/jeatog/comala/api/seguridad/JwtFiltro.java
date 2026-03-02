@@ -1,5 +1,6 @@
 package dev.jeatog.comala.api.seguridad;
 
+import lombok.RequiredArgsConstructor;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,16 +17,13 @@ import java.io.IOException;
  * y, si es válido, establece el principal autenticado en el SecurityContext.
  */
 @Component
+@RequiredArgsConstructor
 public class JwtFiltro extends OncePerRequestFilter {
 
     private static final String HEADER_AUTH  = "Authorization";
     private static final String PREFIJO_BEARER = "Bearer ";
 
     private final JwtUtil jwtUtil;
-
-    public JwtFiltro(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -43,7 +41,8 @@ public class JwtFiltro extends OncePerRequestFilter {
 
         String token = authHeader.substring(PREFIJO_BEARER.length());
 
-        if (!jwtUtil.esTokenValido(token)) {
+        if (!jwtUtil.esTokenValido(token) || jwtUtil.esTokenDeSeleccion(token)) {
+            // Tokens inválidos o de selección no autentican requests normales
             filterChain.doFilter(request, response);
             return;
         }
