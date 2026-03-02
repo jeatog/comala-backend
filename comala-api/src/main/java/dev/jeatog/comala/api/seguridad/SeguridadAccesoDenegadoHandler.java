@@ -27,7 +27,7 @@ public class SeguridadAccesoDenegadoHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException {
+                       AccessDeniedException accessDeniedException) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String identidad = (auth instanceof PrincipalComala p)
                 ? p.getEmail() + " [" + p.getRol() + "]"
@@ -38,7 +38,11 @@ public class SeguridadAccesoDenegadoHandler implements AccessDeniedHandler {
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
-        objectMapper.writeValue(response.getWriter(),
-                ErrorRes.de("ACCESO_DENEGADO", "No tienes permisos para realizar esta accion."));
+        try {
+            objectMapper.writeValue(response.getWriter(),
+                    ErrorRes.de("ACCESO_DENEGADO", "No tienes permisos para realizar esta accion."));
+        } catch (IOException e) {
+            log.error("[SEGURIDAD] Error al escribir respuesta 403: {}", e.getMessage());
+        }
     }
 }
