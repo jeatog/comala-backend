@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ComalaExcepcion.class)
     public ResponseEntity<ErrorRes> manejarComalaExcepcion(ComalaExcepcion ex) {
-        log.warn("Error de dominio: [{}] {}", ex.getCodigo(), ex.getMessage());
         return ResponseEntity
                 .status(ex.getHttpStatus())
                 .body(ErrorRes.de(ex.getCodigo(), ex.getMessage()));
