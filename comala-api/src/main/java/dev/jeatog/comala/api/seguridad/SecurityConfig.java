@@ -1,8 +1,8 @@
 package dev.jeatog.comala.api.seguridad;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,13 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFiltro jwtFiltro;
-
-    public SecurityConfig(JwtFiltro jwtFiltro) {
-        this.jwtFiltro = jwtFiltro;
-    }
+    private final SeguridadEntryPoint seguridadEntryPoint;
+    private final SeguridadAccesoDenegadoHandler accesoDenegadoHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,8 +31,15 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/health").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+                .requestMatchers("/stomp/**").permitAll()
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(exc -> exc
+                .authenticationEntryPoint(seguridadEntryPoint)
+                .accessDeniedHandler(accesoDenegadoHandler)
             )
             .addFilterBefore(jwtFiltro, UsernamePasswordAuthenticationFilter.class);
 
