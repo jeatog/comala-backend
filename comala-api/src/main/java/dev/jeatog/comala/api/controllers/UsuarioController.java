@@ -1,5 +1,7 @@
 package dev.jeatog.comala.api.controllers;
 
+import dev.jeatog.comala.api.models.CambiarNombreReq;
+import dev.jeatog.comala.api.models.CambiarPasswordReq;
 import dev.jeatog.comala.api.models.RegistrarUsuarioReq;
 import dev.jeatog.comala.api.models.UsuarioRes;
 import dev.jeatog.comala.api.seguridad.PrincipalComala;
@@ -25,6 +27,7 @@ public class UsuarioController {
     private final UsuarioServicio usuarioServicio;
     private final AlmacenamientoServicio almacenamientoServicio;
 
+    // Perfiles que administra el Admin
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UsuarioRes> registrar(
@@ -55,6 +58,41 @@ public class UsuarioController {
         PrincipalComala principal = (PrincipalComala) auth;
         String fotoUrl = almacenamientoServicio.guardar(foto);
         var resultado = usuarioServicio.actualizarFoto(usuarioId, principal.getNegocioActivoId(), fotoUrl);
+        return ResponseEntity.ok(UsuarioRes.de(resultado));
+    }
+
+    // Perfil propio
+    @PutMapping("/me/nombre")
+    public ResponseEntity<UsuarioRes> cambiarNombre(
+            @Valid @RequestBody CambiarNombreReq req,
+            Authentication auth
+    ) {
+        PrincipalComala principal = (PrincipalComala) auth;
+        var resultado = usuarioServicio.cambiarNombre(
+                principal.getEmail(), principal.getNegocioActivoId(), req.nombre());
+        return ResponseEntity.ok(UsuarioRes.de(resultado));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<Void> cambiarPassword(
+            @Valid @RequestBody CambiarPasswordReq req,
+            Authentication auth
+    ) {
+        PrincipalComala principal = (PrincipalComala) auth;
+        usuarioServicio.cambiarPassword(
+                principal.getEmail(), req.passwordActual(), req.nuevaPassword());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/me/foto")
+    public ResponseEntity<UsuarioRes> cambiarFotoPropia(
+            @RequestParam("foto") MultipartFile foto,
+            Authentication auth
+    ) {
+        PrincipalComala principal = (PrincipalComala) auth;
+        String fotoUrl = almacenamientoServicio.guardar(foto);
+        var resultado = usuarioServicio.cambiarFotoPropia(
+                principal.getEmail(), principal.getNegocioActivoId(), fotoUrl);
         return ResponseEntity.ok(UsuarioRes.de(resultado));
     }
 }
