@@ -1,7 +1,7 @@
 package dev.jeatog.comala.api.models;
 
 import dev.jeatog.comala.negocio.dto.usuario.UsuarioDto;
-import dev.jeatog.comala.persistencia.enumeraciones.RolUsuario;
+import dev.jeatog.comala.persistencia.enums.RolUsuario;
 
 import java.util.UUID;
 

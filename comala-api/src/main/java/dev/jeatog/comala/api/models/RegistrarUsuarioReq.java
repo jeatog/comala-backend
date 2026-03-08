@@ -1,7 +1,7 @@
 package dev.jeatog.comala.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.jeatog.comala.persistencia.enumeraciones.RolUsuario;
+import dev.jeatog.comala.persistencia.enums.RolUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

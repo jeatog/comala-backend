@@ -2,7 +2,7 @@ package dev.jeatog.comala.api.seguridad;
 
 import dev.jeatog.comala.negocio.constantes.Constantes;
 import dev.jeatog.comala.negocio.excepcion.ComalaExcepcion;
-import dev.jeatog.comala.persistencia.enumeraciones.RolUsuario;
+import dev.jeatog.comala.persistencia.enums.RolUsuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
