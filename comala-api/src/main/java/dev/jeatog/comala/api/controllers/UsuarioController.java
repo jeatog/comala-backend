@@ -4,7 +4,7 @@ import dev.jeatog.comala.api.models.CambiarNombreReq;
 import dev.jeatog.comala.api.models.CambiarPasswordReq;
 import dev.jeatog.comala.api.models.RegistrarUsuarioReq;
 import dev.jeatog.comala.api.models.UsuarioRes;
-import dev.jeatog.comala.api.seguridad.PrincipalComala;
+import dev.jeatog.comala.api.seguridad.UsuarioAutenticado;
 import dev.jeatog.comala.api.servicios.AlmacenamientoServicio;
 import dev.jeatog.comala.negocio.dto.usuario.RegistrarUsuarioDto;
 import dev.jeatog.comala.negocio.servicios.UsuarioServicio;
@@ -34,7 +34,7 @@ public class UsuarioController {
             @Valid @RequestBody RegistrarUsuarioReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = new RegistrarUsuarioDto(
                 principal.getNegocioActivoId(),
                 req.nombre(),
@@ -55,7 +55,7 @@ public class UsuarioController {
             @RequestParam("foto") MultipartFile foto,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         String fotoUrl = almacenamientoServicio.guardar(foto);
         var resultado = usuarioServicio.actualizarFoto(usuarioId, principal.getNegocioActivoId(), fotoUrl);
         return ResponseEntity.ok(UsuarioRes.de(resultado));
@@ -67,7 +67,7 @@ public class UsuarioController {
             @Valid @RequestBody CambiarNombreReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var resultado = usuarioServicio.cambiarNombre(
                 principal.getEmail(), principal.getNegocioActivoId(), req.nombre());
         return ResponseEntity.ok(UsuarioRes.de(resultado));
@@ -78,7 +78,7 @@ public class UsuarioController {
             @Valid @RequestBody CambiarPasswordReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         usuarioServicio.cambiarPassword(
                 principal.getEmail(), req.passwordActual(), req.nuevaPassword());
         return ResponseEntity.noContent().build();
@@ -89,7 +89,7 @@ public class UsuarioController {
             @RequestParam("foto") MultipartFile foto,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         String fotoUrl = almacenamientoServicio.guardar(foto);
         var resultado = usuarioServicio.cambiarFotoPropia(
                 principal.getEmail(), principal.getNegocioActivoId(), fotoUrl);

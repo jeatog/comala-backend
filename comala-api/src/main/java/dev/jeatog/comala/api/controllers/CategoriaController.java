@@ -2,7 +2,7 @@ package dev.jeatog.comala.api.controllers;
 
 import dev.jeatog.comala.api.models.CategoriaReq;
 import dev.jeatog.comala.api.models.CategoriaRes;
-import dev.jeatog.comala.api.seguridad.PrincipalComala;
+import dev.jeatog.comala.api.seguridad.UsuarioAutenticado;
 import dev.jeatog.comala.negocio.servicios.CategoriaServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class CategoriaController {
 
     @GetMapping
     public ResponseEntity<List<CategoriaRes>> listar(Authentication auth) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         List<CategoriaRes> resultado = categoriaServicio
                 .listar(principal.getNegocioActivoId()).stream()
                 .map(CategoriaRes::de)
@@ -38,7 +38,7 @@ public class CategoriaController {
             @Valid @RequestBody CategoriaReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = categoriaServicio.crear(principal.getNegocioActivoId(), req.nombre());
         return ResponseEntity
                 .created(URI.create("/api/categorias/" + dto.categoriaId()))
@@ -52,7 +52,7 @@ public class CategoriaController {
             @Valid @RequestBody CategoriaReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = categoriaServicio.editar(id, principal.getNegocioActivoId(), req.nombre());
         return ResponseEntity.ok(CategoriaRes.de(dto));
     }
@@ -60,7 +60,7 @@ public class CategoriaController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminar(@PathVariable UUID id, Authentication auth) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         categoriaServicio.eliminar(id, principal.getNegocioActivoId());
         return ResponseEntity.noContent().build();
     }

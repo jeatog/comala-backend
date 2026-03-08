@@ -4,7 +4,7 @@ import dev.jeatog.comala.api.models.ProductoReq;
 import dev.jeatog.comala.api.models.ProductoRes;
 import dev.jeatog.comala.api.models.VarianteReq;
 import dev.jeatog.comala.api.models.VarianteRes;
-import dev.jeatog.comala.api.seguridad.PrincipalComala;
+import dev.jeatog.comala.api.seguridad.UsuarioAutenticado;
 import dev.jeatog.comala.api.servicios.AlmacenamientoServicio;
 import dev.jeatog.comala.negocio.servicios.ProductoServicio;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ public class ProductoController {
             @RequestParam(required = false) UUID categoriaId,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         List<ProductoRes> resultado = productoServicio
                 .listar(principal.getNegocioActivoId(), categoriaId).stream()
                 .map(ProductoRes::de)
@@ -43,7 +43,7 @@ public class ProductoController {
 
     @GetMapping("/productos/{id}")
     public ResponseEntity<ProductoRes> obtenerPorId(@PathVariable UUID id, Authentication auth) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = productoServicio.obtenerPorId(id, principal.getNegocioActivoId());
         return ResponseEntity.ok(ProductoRes.de(dto));
     }
@@ -54,7 +54,7 @@ public class ProductoController {
             @Valid @RequestBody ProductoReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = productoServicio.crear(
                 principal.getNegocioActivoId(), req.categoriaId(), req.nombre());
         return ResponseEntity
@@ -69,7 +69,7 @@ public class ProductoController {
             @Valid @RequestBody ProductoReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = productoServicio.editar(
                 id, principal.getNegocioActivoId(), req.nombre(), req.categoriaId());
         return ResponseEntity.ok(ProductoRes.de(dto));
@@ -82,7 +82,7 @@ public class ProductoController {
             @RequestParam("foto") MultipartFile foto,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         String fotoUrl = almacenamientoServicio.guardar(foto);
         var dto = productoServicio.actualizarFoto(id, principal.getNegocioActivoId(), fotoUrl);
         return ResponseEntity.ok(ProductoRes.de(dto));
@@ -95,7 +95,7 @@ public class ProductoController {
             @RequestParam boolean activo,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = productoServicio.cambiarActivo(id, principal.getNegocioActivoId(), activo);
         return ResponseEntity.ok(ProductoRes.de(dto));
     }
@@ -103,7 +103,7 @@ public class ProductoController {
     @DeleteMapping("/productos/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminar(@PathVariable UUID id, Authentication auth) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         productoServicio.eliminar(id, principal.getNegocioActivoId());
         return ResponseEntity.noContent().build();
     }
@@ -114,7 +114,7 @@ public class ProductoController {
             @PathVariable UUID productoId,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         List<VarianteRes> resultado = productoServicio
                 .listarVariantes(productoId, principal.getNegocioActivoId()).stream()
                 .map(VarianteRes::de)
@@ -129,7 +129,7 @@ public class ProductoController {
             @Valid @RequestBody VarianteReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = productoServicio.crearVariante(
                 productoId, principal.getNegocioActivoId(),
                 req.nombreVariante(), req.precioBase());
@@ -145,7 +145,7 @@ public class ProductoController {
             @Valid @RequestBody VarianteReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = productoServicio.editarVariante(
                 id, principal.getNegocioActivoId(),
                 req.nombreVariante(), req.precioBase());
@@ -155,7 +155,7 @@ public class ProductoController {
     @DeleteMapping("/variantes/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarVariante(@PathVariable UUID id, Authentication auth) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         productoServicio.eliminarVariante(id, principal.getNegocioActivoId());
         return ResponseEntity.noContent().build();
     }

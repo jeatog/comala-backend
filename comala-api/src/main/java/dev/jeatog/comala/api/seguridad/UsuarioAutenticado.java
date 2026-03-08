@@ -11,13 +11,13 @@ import java.util.UUID;
  * Representa al usuario autenticado dentro del SecurityContext.
  * Contiene el email, el negocio activo y el rol extraídos del JWT.
  */
-public class PrincipalComala extends AbstractAuthenticationToken {
+public class UsuarioAutenticado extends AbstractAuthenticationToken {
 
     private final String email;
     private final UUID negocioActivoId;
     private final RolUsuario rol;
 
-    public PrincipalComala(String email, UUID negocioActivoId, RolUsuario rol) {
+    public UsuarioAutenticado(String email, UUID negocioActivoId, RolUsuario rol) {
         super(List.of(new SimpleGrantedAuthority("ROLE_" + rol.name())));
         this.email = email;
         this.negocioActivoId = negocioActivoId;

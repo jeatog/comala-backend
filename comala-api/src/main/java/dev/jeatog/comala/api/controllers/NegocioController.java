@@ -2,7 +2,7 @@ package dev.jeatog.comala.api.controllers;
 
 import dev.jeatog.comala.api.models.NegocioReq;
 import dev.jeatog.comala.api.models.NegocioRes;
-import dev.jeatog.comala.api.seguridad.PrincipalComala;
+import dev.jeatog.comala.api.seguridad.UsuarioAutenticado;
 import dev.jeatog.comala.negocio.servicios.NegocioServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class NegocioController {
 
     @GetMapping
     public ResponseEntity<NegocioRes> obtener(Authentication auth) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = negocioServicio.obtener(principal.getNegocioActivoId());
         return ResponseEntity.ok(NegocioRes.de(dto));
     }
@@ -31,7 +31,7 @@ public class NegocioController {
             @Valid @RequestBody NegocioReq req,
             Authentication auth
     ) {
-        PrincipalComala principal = (PrincipalComala) auth;
+        UsuarioAutenticado principal = (UsuarioAutenticado) auth;
         var dto = negocioServicio.editarNombre(principal.getNegocioActivoId(), req.nombre());
         return ResponseEntity.ok(NegocioRes.de(dto));
     }

@@ -47,7 +47,7 @@ public class JwtFiltro extends OncePerRequestFilter {
             return;
         }
 
-        PrincipalComala principal = new PrincipalComala(
+        UsuarioAutenticado principal = new UsuarioAutenticado(
                 jwtUtil.extraerEmail(token),
                 jwtUtil.extraerNegocioActivoId(token),
                 jwtUtil.extraerRol(token)

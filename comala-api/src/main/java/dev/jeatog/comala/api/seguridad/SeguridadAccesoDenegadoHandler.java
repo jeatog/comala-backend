@@ -29,7 +29,7 @@ public class SeguridadAccesoDenegadoHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        String identidad = (auth instanceof PrincipalComala p)
+        String identidad = (auth instanceof UsuarioAutenticado p)
                 ? p.getEmail() + " [" + p.getRol() + "]"
                 : "desconocido";
 
