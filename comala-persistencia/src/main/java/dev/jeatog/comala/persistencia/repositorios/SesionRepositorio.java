@@ -1,7 +1,7 @@
 package dev.jeatog.comala.persistencia.repositorios;
 
 import dev.jeatog.comala.persistencia.entidades.Sesion;
-import dev.jeatog.comala.persistencia.enumeraciones.EstatusSesion;
+import dev.jeatog.comala.persistencia.enums.EstatusSesion;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

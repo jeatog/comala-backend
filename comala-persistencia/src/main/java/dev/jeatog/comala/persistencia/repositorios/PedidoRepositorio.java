@@ -1,8 +1,8 @@
 package dev.jeatog.comala.persistencia.repositorios;
 
 import dev.jeatog.comala.persistencia.entidades.Pedido;
-import dev.jeatog.comala.persistencia.enumeraciones.EstatusPedido;
-import dev.jeatog.comala.persistencia.enumeraciones.MetodoPago;
+import dev.jeatog.comala.persistencia.enums.EstatusPedido;
+import dev.jeatog.comala.persistencia.enums.MetodoPago;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

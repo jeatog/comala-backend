@@ -1,6 +1,6 @@
 package dev.jeatog.comala.persistencia.entidades;
 
-import dev.jeatog.comala.persistencia.enumeraciones.EstatusSesion;
+import dev.jeatog.comala.persistencia.enums.EstatusSesion;
 import jakarta.persistence.*;
 import lombok.*;
 

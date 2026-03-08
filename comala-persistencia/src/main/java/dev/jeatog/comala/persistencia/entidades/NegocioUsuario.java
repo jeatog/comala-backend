@@ -1,6 +1,6 @@
 package dev.jeatog.comala.persistencia.entidades;
 
-import dev.jeatog.comala.persistencia.enumeraciones.RolUsuario;
+import dev.jeatog.comala.persistencia.enums.RolUsuario;
 import jakarta.persistence.*;
 import lombok.*;
 

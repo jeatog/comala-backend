@@ -1,9 +1,9 @@
 package dev.jeatog.comala.persistencia.entidades;
 
-import dev.jeatog.comala.persistencia.enumeraciones.EstatusPedido;
-import dev.jeatog.comala.persistencia.enumeraciones.MetodoPago;
-import dev.jeatog.comala.persistencia.enumeraciones.MetodoSolicitud;
-import dev.jeatog.comala.persistencia.enumeraciones.TipoEnvio;
+import dev.jeatog.comala.persistencia.enums.EstatusPedido;
+import dev.jeatog.comala.persistencia.enums.MetodoPago;
+import dev.jeatog.comala.persistencia.enums.MetodoSolicitud;
+import dev.jeatog.comala.persistencia.enums.TipoEnvio;
 import jakarta.persistence.*;
 import lombok.*;
 
