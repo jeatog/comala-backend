@@ -1,6 +1,6 @@
 package dev.jeatog.comala.api.seguridad;
 
-import dev.jeatog.comala.persistencia.enumeraciones.RolUsuario;
+import dev.jeatog.comala.persistencia.enums.RolUsuario;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
