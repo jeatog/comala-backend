@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +32,14 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(ErrorRes.de(Constantes.ERR_PEDIDO_CONFLICTO,
                         "El pedido fue modificado por otro usuario. Por favor recárgalo e intenta de nuevo."));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorRes> manejarJsonInvalido(HttpMessageNotReadableException ex) {
+        log.warn("JSON no legible: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorRes.de("JSON_INVALIDO", "El cuerpo de la solicitud no es valido o contiene valores no reconocidos."));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
