@@ -16,6 +16,8 @@ public interface PedidoRepositorio extends JpaRepository<Pedido, UUID> {
             UUID sesionId, List<EstatusPedido> estatusExcluidos
     );
 
+    List<Pedido> findBySesion_SesionIdAndEstatusIn(UUID sesionId, List<EstatusPedido> estatuses);
+
     List<Pedido> findBySesion_Negocio_NegocioIdAndMetodoPagoAndPagadoFalse(
             UUID negocioId, MetodoPago metodoPago
     );
