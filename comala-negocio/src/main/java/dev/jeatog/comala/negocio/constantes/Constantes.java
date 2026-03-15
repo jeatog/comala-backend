@@ -27,6 +27,10 @@ public final class Constantes {
     public static final String ERR_VARIANTE_NO_DISPONIBLE   = "VARIANTE_NO_DISPONIBLE";
     public static final String ERR_CATEGORIA_NO_ENCONTRADA  = "CATEGORIA_NO_ENCONTRADA";
 
+    public static final String ERR_COBRO_YA_PAGADO       = "COBRO_YA_PAGADO";
+    public static final String ERR_COBRO_NO_ES_FIADO     = "COBRO_NO_ES_FIADO";
+    public static final String ERR_COBRO_METODO_INVALIDO  = "COBRO_METODO_INVALIDO";
+
     public static final String ERR_ALMACENAMIENTO = "ALMACENAMIENTO_ERROR";
 
     // Valores de negocio
