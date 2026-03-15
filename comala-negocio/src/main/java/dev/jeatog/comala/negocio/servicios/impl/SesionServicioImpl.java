@@ -4,15 +4,19 @@ import dev.jeatog.comala.negocio.constantes.Constantes;
 import dev.jeatog.comala.negocio.dto.sesion.CrearSesionDto;
 import dev.jeatog.comala.negocio.dto.sesion.ProductoSesionDto;
 import dev.jeatog.comala.negocio.dto.sesion.SesionDto;
+import dev.jeatog.comala.negocio.dto.sesion.SesionResumenDto;
 import dev.jeatog.comala.negocio.excepcion.ComalaExcepcion;
 import dev.jeatog.comala.negocio.servicios.SesionServicio;
 import dev.jeatog.comala.persistencia.entidades.Negocio;
 import dev.jeatog.comala.persistencia.entidades.ProductoSesion;
 import dev.jeatog.comala.persistencia.entidades.Sesion;
 import dev.jeatog.comala.persistencia.entidades.Usuario;
+import dev.jeatog.comala.persistencia.entidades.Pedido;
 import dev.jeatog.comala.persistencia.entidades.VarianteProducto;
 import dev.jeatog.comala.persistencia.enums.EstatusPedido;
 import dev.jeatog.comala.persistencia.enums.EstatusSesion;
+import dev.jeatog.comala.persistencia.enums.MetodoPago;
+import dev.jeatog.comala.persistencia.enums.TipoEnvio;
 import dev.jeatog.comala.persistencia.repositorios.NegocioRepositorio;
 import dev.jeatog.comala.persistencia.repositorios.PedidoRepositorio;
 import dev.jeatog.comala.persistencia.repositorios.ProductoSesionRepositorio;
@@ -26,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -208,6 +214,39 @@ public class SesionServicioImpl implements SesionServicio {
         return productoSesionRepositorio.findBySesion_SesionId(sesionId).stream()
                 .map(this::toProductoSesionDto)
                 .toList();
+    }
+
+    /**
+     * Obtiene un resumen de la sesion: totales por metodo de pago, tipo de envio y pedidos por estatus.
+     *
+     * @param sesionId  identificador de la sesion
+     * @param negocioId identificador del negocio (validacion)
+     * @return resumen con totales agrupados
+     * @throws ComalaExcepcion 404 si no existe, 403 si no pertenece al negocio
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public SesionResumenDto obtenerResumen(UUID sesionId, UUID negocioId) {
+        Sesion sesion = buscarYValidar(sesionId, negocioId);
+        List<Pedido> pedidos = pedidoRepositorio.findBySesion_SesionIdOrderByCreatedAtAsc(sesionId);
+
+        Map<MetodoPago, BigDecimal> totalesPorMetodoPago = new EnumMap<>(MetodoPago.class);
+        Map<TipoEnvio, BigDecimal> totalesPorTipoEnvio = new EnumMap<>(TipoEnvio.class);
+        Map<EstatusPedido, Integer> pedidosPorEstatus = new EnumMap<>(EstatusPedido.class);
+
+        for (Pedido p : pedidos) {
+            totalesPorMetodoPago.merge(p.getMetodoPago(), p.getTotal(), BigDecimal::add);
+            totalesPorTipoEnvio.merge(p.getTipoEnvio(), p.getTotal(), BigDecimal::add);
+            pedidosPorEstatus.merge(p.getEstatus(), 1, Integer::sum);
+        }
+
+        return new SesionResumenDto(
+                toDto(sesion),
+                pedidos.size(),
+                totalesPorMetodoPago,
+                totalesPorTipoEnvio,
+                pedidosPorEstatus
+        );
     }
 
     private Sesion buscarYValidar(UUID sesionId, UUID negocioId) {
