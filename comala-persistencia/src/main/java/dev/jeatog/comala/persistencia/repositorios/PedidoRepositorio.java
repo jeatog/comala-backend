@@ -18,7 +18,12 @@ public interface PedidoRepositorio extends JpaRepository<Pedido, UUID> {
 
     List<Pedido> findBySesion_SesionIdAndEstatusIn(UUID sesionId, List<EstatusPedido> estatuses);
 
-    List<Pedido> findBySesion_Negocio_NegocioIdAndMetodoPagoAndPagadoFalse(
+    List<Pedido> findBySesion_Negocio_NegocioIdAndMetodoPagoAndPagadoFalseOrderByFechaCompromisoAsc(
+            UUID negocioId, MetodoPago metodoPago
+    );
+
+    List<Pedido> findBySesion_Negocio_NegocioIdAndMetodoPagoAndPagadoTrueOrderByFechaPagoRealDesc(
             UUID negocioId, MetodoPago metodoPago
     );
 }
+
