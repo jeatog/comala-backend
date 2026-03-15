@@ -1,11 +1,19 @@
 package dev.jeatog.comala.api.servicios;
 
+import dev.jeatog.comala.negocio.dto.pedido.CrearPedidoDto;
+import dev.jeatog.comala.negocio.dto.pedido.PedidoLineaEntradaDto;
 import dev.jeatog.comala.negocio.dto.sesion.CrearSesionDto;
 import dev.jeatog.comala.negocio.dto.sesion.ProductoSesionDto;
 import dev.jeatog.comala.negocio.dto.sesion.ProductoSesionEntradaDto;
 import dev.jeatog.comala.negocio.dto.sesion.SesionDto;
+import dev.jeatog.comala.negocio.dto.sesion.SesionResumenDto;
 import dev.jeatog.comala.negocio.excepcion.ComalaExcepcion;
+import dev.jeatog.comala.negocio.servicios.PedidoServicio;
 import dev.jeatog.comala.negocio.servicios.SesionServicio;
+import dev.jeatog.comala.persistencia.enums.EstatusPedido;
+import dev.jeatog.comala.persistencia.enums.MetodoPago;
+import dev.jeatog.comala.persistencia.enums.MetodoSolicitud;
+import dev.jeatog.comala.persistencia.enums.TipoEnvio;
 import dev.jeatog.comala.persistencia.entidades.Categoria;
 import dev.jeatog.comala.persistencia.entidades.Negocio;
 import dev.jeatog.comala.persistencia.entidades.Producto;
@@ -37,6 +45,9 @@ class SesionServicioTest {
 
     @Autowired
     private SesionServicio sesionServicio;
+
+    @Autowired
+    private PedidoServicio pedidoServicio;
 
     @Autowired
     private NegocioRepositorio negocioRepositorio;
@@ -217,5 +228,47 @@ class SesionServicioTest {
         );
 
         assertEquals(2, productos.size());
+    }
+
+    @Test
+    void obtenerResumen_conPedidos() {
+        SesionDto creada = sesionServicio.crear(crearDtoSesion());
+        UUID sId = creada.sesionId();
+
+        // Crear 2 pedidos con distintos metodos de pago y tipo envio
+        pedidoServicio.crear(new CrearPedidoDto(
+                sId, "Cliente 1", null,
+                MetodoPago.EFECTIVO, MetodoSolicitud.WHATSAPP, TipoEnvio.NORMAL,
+                null,
+                List.of(new PedidoLineaEntradaDto(variante1.getVarianteId(), 2, null))
+        ), negocio.getNegocioId());
+
+        pedidoServicio.crear(new CrearPedidoDto(
+                sId, "Cliente 2", "Dir",
+                MetodoPago.TRANSFERENCIA, MetodoSolicitud.EN_PERSONA, TipoEnvio.PROPIO,
+                null,
+                List.of(new PedidoLineaEntradaDto(variante2.getVarianteId(), 1, null))
+        ), negocio.getNegocioId());
+
+        SesionResumenDto resumen = sesionServicio.obtenerResumen(sId, negocio.getNegocioId());
+
+        assertEquals(2, resumen.totalPedidos());
+        assertEquals(2, resumen.totalesPorMetodoPago().size());
+        assertTrue(resumen.totalesPorMetodoPago().containsKey(MetodoPago.EFECTIVO));
+        assertTrue(resumen.totalesPorMetodoPago().containsKey(MetodoPago.TRANSFERENCIA));
+        assertEquals(2, resumen.totalesPorTipoEnvio().size());
+        assertEquals(2, resumen.pedidosPorEstatus().getOrDefault(EstatusPedido.RECIEN_PEDIDO, 0));
+    }
+
+    @Test
+    void obtenerResumen_sinPedidos() {
+        SesionDto creada = sesionServicio.crear(crearDtoSesion());
+
+        SesionResumenDto resumen = sesionServicio.obtenerResumen(
+                creada.sesionId(), negocio.getNegocioId()
+        );
+
+        assertEquals(0, resumen.totalPedidos());
+        assertTrue(resumen.totalesPorMetodoPago().isEmpty());
     }
 }

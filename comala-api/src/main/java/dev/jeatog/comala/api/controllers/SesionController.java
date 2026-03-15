@@ -3,6 +3,7 @@ package dev.jeatog.comala.api.controllers;
 import dev.jeatog.comala.api.models.CrearSesionReq;
 import dev.jeatog.comala.api.models.ProductoSesionRes;
 import dev.jeatog.comala.api.models.SesionRes;
+import dev.jeatog.comala.api.models.SesionResumenRes;
 import dev.jeatog.comala.api.seguridad.UsuarioAutenticado;
 import dev.jeatog.comala.negocio.dto.sesion.CrearSesionDto;
 import dev.jeatog.comala.negocio.dto.sesion.ProductoSesionEntradaDto;
@@ -10,6 +11,7 @@ import dev.jeatog.comala.negocio.dto.sesion.SesionDto;
 import dev.jeatog.comala.negocio.servicios.SesionServicio;
 import dev.jeatog.comala.persistencia.repositorios.UsuarioRepositorio;
 import dev.jeatog.comala.websocket.models.SesionEventoMsg;
+import dev.jeatog.comala.websocket.presencia.PresenciaServicio;
 import dev.jeatog.comala.websocket.publicador.EventoPublicador;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -30,6 +33,7 @@ public class SesionController {
     private final SesionServicio sesionServicio;
     private final UsuarioRepositorio usuarioRepositorio;
     private final EventoPublicador eventoPublicador;
+    private final PresenciaServicio presenciaServicio;
 
     @GetMapping("/activa")
     public ResponseEntity<SesionRes> obtenerActiva(Authentication auth) {
@@ -106,6 +110,21 @@ public class SesionController {
                 .map(SesionRes::de)
                 .toList();
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/{sesionId}/presencia")
+    public ResponseEntity<Set<String>> obtenerPresencia(@PathVariable UUID sesionId) {
+        return ResponseEntity.ok(presenciaServicio.obtenerConectados(sesionId));
+    }
+
+    @GetMapping("/{sesionId}/resumen")
+    public ResponseEntity<SesionResumenRes> obtenerResumen(
+            @PathVariable UUID sesionId,
+            Authentication auth
+    ) {
+        UsuarioAutenticado usuario = (UsuarioAutenticado) auth;
+        var resultado = sesionServicio.obtenerResumen(sesionId, usuario.getNegocioActivoId());
+        return ResponseEntity.ok(SesionResumenRes.de(resultado));
     }
 
     @GetMapping("/{sesionId}/productos")
